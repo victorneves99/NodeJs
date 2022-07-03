@@ -8,7 +8,7 @@ const server = express();
 
 //request Body = {nomew:"NodeJS',tipo:'Back-end'"}
 
-const cursos = ["Node JS", "Java", "React Native"];
+const cursos = ["Node JS", "Java", "React Native", "JAVAEE"];
 
 //localhost:3000/curso
 server.get("/curso/:id", (req, res) => {
