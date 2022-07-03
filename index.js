@@ -12,6 +12,29 @@ server.use(express.json());
 
 const cursos = ["Node JS", "Java", "React Native", "JAVAEE"];
 
+//middleware Global
+server.use((req, res, next) => {
+  console.log(`REQUISICAO CHAMADA: ${req.url}`);
+  return next();
+});
+
+function checkCurso(req, res, next) {
+  if (!req.body.name) {
+    return res.status(400).json({ error: "Nome do curso é obrigatorio " });
+  }
+
+  return next();
+}
+function checkIndex(req, res, next) {
+  const curso = cursos[req.params.index];
+  if (!curso) {
+    return res
+      .status(400)
+      .json({ error: `O curso ${req.params.index} não existe` });
+  }
+  return next();
+}
+
 //localhost:3000/curso
 server.get("/curso/:id", (req, res) => {
   const id = req.params.id;
@@ -23,7 +46,7 @@ server.get("/curso/", (req, res) => {
 
   return res.send({ curso: `Query  : ${nome}` });
 });
-server.get("/cursos/:index", (req, res) => {
+server.get("/cursos/:index", checkIndex, (req, res) => {
   const { index } = req.params;
 
   return res.send(cursos[index]);
@@ -31,14 +54,14 @@ server.get("/cursos/:index", (req, res) => {
 server.get("/cursos", (req, res) => {
   return res.json(cursos);
 });
-server.post("/cursos", (req, res) => {
+server.post("/cursos", checkCurso, (req, res) => {
   const { name } = req.body;
 
   cursos.push(name);
 
   return res.json(cursos);
 });
-server.put("/cursos/:index", (req, res) => {
+server.put("/cursos/:index", checkIndex, checkCurso, (req, res) => {
   const { index } = req.params;
 
   const { name } = req.body;
@@ -47,7 +70,7 @@ server.put("/cursos/:index", (req, res) => {
 
   return res.json(cursos);
 });
-server.delete("/cursos/:index", (req, res) => {
+server.delete("/cursos/:index", checkIndex, (req, res) => {
   const { index } = req.params;
 
   cursos.splice(index, 1);
