@@ -8,6 +8,8 @@ const server = express();
 
 //request Body = {nomew:"NodeJS',tipo:'Back-end'"}
 
+const cursos = ["Node JS", "Java", "React Native"];
+
 //localhost:3000/curso
 server.get("/curso/:id", (req, res) => {
   const id = req.params.id;
@@ -18,6 +20,11 @@ server.get("/curso/", (req, res) => {
   const nome = req.query.nome;
 
   return res.send({ curso: `Query  : ${nome}` });
+});
+server.get("/cursos/:index", (req, res) => {
+  const { index } = req.params;
+
+  return res.send(cursos[index]);
 });
 
 server.listen(3000);
